@@ -1,2 +1,3 @@
 1433415092231	Extract method 'accounting'
 1433416975799	Extract method 'logging'
+1433417818803	Move method 'logging'
