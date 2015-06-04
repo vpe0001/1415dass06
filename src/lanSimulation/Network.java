@@ -231,6 +231,8 @@ Therefore #receiver sends a packet across the token ring network, until either
 			// just ignore
 		};
 		currentNode = startNode.nextNode_;
+		currentNode = send(currentNode, packet, report);
+		/*
 		while (atDestination(currentNode, packet)) {
 			try {
 				currentNode.logging(report);
@@ -239,6 +241,7 @@ Therefore #receiver sends a packet across the token ring network, until either
 			};
 			currentNode = currentNode.nextNode_;
 		};
+		*/
 
 		if (packet.destination_.equals(currentNode.name_)) {
 			result = packet.printDocument(currentNode, report);
@@ -260,7 +263,20 @@ Therefore #receiver sends a packet across the token ring network, until either
 				& (! packet.origin_.equals(currentNode.name_));
 	}
 
-	
+	private Node send(Node currentNode, Packet packet, Writer report){
+		if (atDestination(currentNode, packet)){
+			try {
+				currentNode.logging(report);
+			} catch (IOException exc) {
+				// just ignore
+			};
+			currentNode = send(currentNode.nextNode_, packet, report);
+		}else{
+			
+		}
+		
+		return currentNode;
+	}
 
 	/**
 Return a printable representation of #receiver.
