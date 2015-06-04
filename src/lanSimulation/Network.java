@@ -74,10 +74,12 @@ Currently, the network looks as follows.
 	public static Network DefaultExample () {
 		Network network = new Network (2);
 
+		
 		Node wsFilip = new WorkStation (Node.WORKSTATION, "Filip");
 		Node n1 = new Node(Node.NODE, "n1");
 		Node wsHans = new WorkStation (Node.WORKSTATION, "Hans");
 		Node prAndy = new Printer (Node.PRINTER, "Andy");
+		
 
 		wsFilip.nextNode_ = n1;
 		n1.nextNode_ = wsHans;
@@ -346,7 +348,7 @@ Write a printable representation of #receiver on the given #buf.
 	 */
 	public void printOn (StringBuffer buf) {
 		assert isInitialized();
-		firstNode_.printOn(this, buf);
+		firstNode_.printOn(buf);
 	}
 
 	/**

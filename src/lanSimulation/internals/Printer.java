@@ -10,5 +10,20 @@ public class Printer extends Node{
 		super(type, name, nextNode);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public void printOnAppend(StringBuffer buf) {
+		
+		buf.append("Printer ");
+		buf.append(this.name_);
+		buf.append(" [Printer]");
+		
+		//return buf;
+	}
+	
+	public void printXMLOnAppend(StringBuffer buf) {
+		buf.append("<printer>");
+		buf.append(this.name_);
+		buf.append("</printer>");
+	}
 
 }
