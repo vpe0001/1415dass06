@@ -231,8 +231,7 @@ Therefore #receiver sends a packet across the token ring network, until either
 			// just ignore
 		};
 		currentNode = startNode.nextNode_;
-		while ((! packet.destination_.equals(currentNode.name_))
-				& (! packet.origin_.equals(currentNode.name_))) {
+		while (atDestination(currentNode, packet)) {
 			try {
 				currentNode.logging(report);
 			} catch (IOException exc) {
@@ -254,6 +253,11 @@ Therefore #receiver sends a packet across the token ring network, until either
 		}
 
 		return result;
+	}
+
+	private boolean atDestination(Node currentNode, Packet packet) {
+		return (! packet.destination_.equals(currentNode.name_))
+				& (! packet.origin_.equals(currentNode.name_));
 	}
 
 	
