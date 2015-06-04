@@ -46,7 +46,7 @@ public class Node {
 	/**
     Holds the type of the Node.
 	 */
-	public byte type_;
+	//public byte type_;
 	/**
     Holds the name of the Node.
 	 */
@@ -61,9 +61,9 @@ public class Node {
 Construct a <em>Node</em> with given #type and #name.
 <p><strong>Precondition:</strong> (type >= NODE) & (type <= PRINTER);</p>
 	 */
-	public Node(byte type, String name) {
-		assert (type >= NODE) & (type <= PRINTER);
-		type_ = type;
+	public Node(String name) {
+		//assert (type >= NODE) & (type <= PRINTER);
+		//type_ = type;
 		name_ = name;
 		nextNode_ = null;
 	}
@@ -72,9 +72,9 @@ Construct a <em>Node</em> with given #type and #name.
 Construct a <em>Node</em> with given #type and #name, and which is linked to #nextNode.
 <p><strong>Precondition:</strong> (type >= NODE) & (type <= PRINTER);</p>
 	 */
-	public Node(byte type, String name, Node nextNode) {
-		assert (type >= NODE) & (type <= PRINTER);
-		type_ = type;
+	public Node(String name, Node nextNode) {
+		//assert (type >= NODE) & (type <= PRINTER);
+		//type_ = type;
 		name_ = name;
 		nextNode_ = nextNode;
 	}
@@ -89,7 +89,8 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 	public void printOn(StringBuffer buf) {
 		Node currentNode = this;
 		do {
-			if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+			//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+			if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
 				currentNode.printOnAppend(buf);
 			}else{
 				buf.append("(Unexpected)");;
@@ -116,7 +117,8 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 		buf.append("\n\n<UL>");
 		do {
 			buf.append("\n\t<LI> ");
-			if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+			//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+			if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
 				currentNode.printOnAppend(buf);
 			}else{
 				buf.append("(Unexpected)");
@@ -133,7 +135,8 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<network>");
 		do {
 			buf.append("\n\t");
-			if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+			//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+			if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
 				currentNode.printXMLOnAppend(buf);
 			}else{
 				buf.append("<unknown></unknown>");

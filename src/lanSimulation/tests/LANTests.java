@@ -23,6 +23,7 @@ import lanSimulation.internals.*;
 import lanSimulation.*;
 import junit.framework.*;
 import junit.extensions.*;
+
 import java.lang.AssertionError;
 import java.io.*;
 
@@ -139,16 +140,21 @@ public class LANTests extends TestCase {
     public void testBasicNode() {
         Node node;
 
+        /*
     	node = new Node(Node.NODE, "n");
-        assertEquals("type_",
-            node.type_, Node.NODE);
-        assertEquals("name_",
-            node.name_, "n");
-        assertEquals("nextNode_",
-            node.nextNode_, null);
+        assertEquals("type_", node.type_, Node.NODE);
+        assertEquals("name_", node.name_, "n");
+        assertEquals("nextNode_", node.nextNode_, null);
         node.nextNode_ = node;
         assertEquals("nextNode_ (after setting)",
             node.nextNode_, node);
+        */
+        
+        node = new Node("n");
+        assertEquals("name_", node.name_, "n");
+        assertEquals("nextNode_", node.nextNode_, null);
+        node.nextNode_ = node;
+        assertEquals("nextNode_ (after setting)", node.nextNode_, node);
     }
 
     public void testDefaultNetworkToString() {
@@ -232,6 +238,7 @@ the tests should work as expected.
 	    network.requestWorkstationPrintsDocument("Filip", "!PS Hello World in postscript", "Hans", report);
 	    report.write("\n\n---------------------------------SCENARIO: Broadcast Success -----------------\n");
 	    network.requestBroadcast(report);
+	    
 	    generateOutput.write(report.toString());
 	} catch (IOException exc) {
 	} finally {
