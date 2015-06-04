@@ -46,6 +46,9 @@ public class Network {
 	 */
 	private Hashtable workstations_;
 
+	private int printersFound;
+	private int workstationsFound;
+	private Hashtable encountered;
 	/**
 Construct a <em>Network</em> suitable for holding #size Workstations.
 <p><strong>Postcondition:</strong>(result.isInitialized()) & (! result.consistentNetwork());</p>
@@ -127,8 +130,8 @@ A consistent token ring network
 		assert isInitialized();
 		Enumeration iter;
 		Node currentNode;
-		int printersFound = 0, workstationsFound = 0;
-		Hashtable encountered = new Hashtable(workstations_.size() * 2, 1.0f);
+		
+		encountered = new Hashtable(workstations_.size() * 2, 1.0f);
 
 		if (workstations_.isEmpty()) {return false;};
 		if (firstNode_ == null) {return false;};
@@ -141,17 +144,44 @@ A consistent token ring network
 		//enumerate the token ring, verifying whether all workstations are registered
 		//also count the number of printers and see whether the ring is circular
 		currentNode = firstNode_;
-		while (! encountered.containsKey(currentNode.name_)) {
-			encountered.put(currentNode.name_, currentNode);
-			if (currentNode.type_ == Node.WORKSTATION) {workstationsFound++;};
-			if (currentNode.type_ == Node.PRINTER) {printersFound++;};
-			currentNode = currentNode.nextNode_;
-		};
-		if (currentNode != firstNode_) {return false;};//not circular
-		if (printersFound == 0) {return false;};//does not contain a printer
-		if (workstationsFound != workstations_.size()) {return false;}; //not all workstations are registered
+		printersFound=0;
+		workstationsFound=0;
+		
+		
+		currentNode = circleNetwork(currentNode);
+		
+		if (currentNode != firstNode_) {
+			return false;
+		}//not circular
+		if (printersFound == 0) {
+			return false;
+		}//does not contain a printer
+		if (workstationsFound != workstations_.size()) {
+			return false;
+		} //not all workstations are registered
 		//all verifications succeedeed
-		return true;}
+		return true;
+	}
+
+	private Node circleNetwork(Node currentNode) {
+		if (atRegistering(currentNode, encountered)) {
+			encountered.put(currentNode.name_, currentNode);
+			if (currentNode.type_ == Node.WORKSTATION) {
+				workstationsFound++;
+			}
+			if (currentNode.type_ == Node.PRINTER) {
+				printersFound++;
+			}
+			//currentNode = currentNode.nextNode_;
+			currentNode = circleNetwork(currentNode.nextNode_);
+		}
+		
+		return currentNode;
+	}
+
+	private boolean atRegistering(Node currentNode, Hashtable encountered) {
+		return ! encountered.containsKey(currentNode.name_);
+	}
 
 	/**
 The #receiver is requested to broadcast a message to all nodes.
@@ -172,6 +202,8 @@ which should be treated by all nodes.
 
 		Node currentNode = firstNode_;
 		Packet packet = new Packet("BROADCAST", firstNode_.name_, firstNode_.name_);
+		currentNode = send(currentNode, packet, report, true);
+		/*
 		do {
 			try {
 				report.write("\tNode '");
@@ -183,6 +215,7 @@ which should be treated by all nodes.
 			};
 			currentNode = currentNode.nextNode_;
 		} while (atDestination(currentNode, packet));
+		*/
 
 		try {
 			report.write(">>> Broadcast travelled whole token ring.\n\n");
@@ -190,7 +223,9 @@ which should be treated by all nodes.
 			// just ignore
 		};
 		return true;
-	}    
+	}
+	
+	
 
 	/**
 The #receiver is requested by #workstation to print #document on #printer.
@@ -231,7 +266,7 @@ Therefore #receiver sends a packet across the token ring network, until either
 			// just ignore
 		};
 		currentNode = startNode.nextNode_;
-		currentNode = send(currentNode, packet, report);
+		currentNode = send(currentNode, packet, report, false);
 		/*
 		while (atDestination(currentNode, packet)) {
 			try {
@@ -263,16 +298,32 @@ Therefore #receiver sends a packet across the token ring network, until either
 				& (! packet.origin_.equals(currentNode.name_));
 	}
 
-	private Node send(Node currentNode, Packet packet, Writer report){
-		if (atDestination(currentNode, packet)){
+	private Node send(Node currentNode, Packet packet, Writer report, Boolean broadcast){
+		if (broadcast) {
 			try {
+				report.write("\tNode '");
+				report.write(currentNode.name_);
+				report.write("' accepts broadcase packet.\n");
 				currentNode.logging(report);
 			} catch (IOException exc) {
 				// just ignore
-			};
-			currentNode = send(currentNode.nextNode_, packet, report);
-		}else{
+			}
 			
+			currentNode = currentNode.nextNode_;
+			
+			if (atDestination(currentNode, packet)){		
+				currentNode = send(currentNode, packet, report, true);	
+			}
+		}else{
+		
+			if (atDestination(currentNode, packet)){
+				try {
+					currentNode.logging(report);
+				} catch (IOException exc) {
+					// just ignore
+				};
+				currentNode = send(currentNode.nextNode_, packet, report, false);
+			}
 		}
 		
 		return currentNode;

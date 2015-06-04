@@ -4,3 +4,5 @@
 1433418672837	Move method 'printDocument'
 1433418817828	Change method 'accounting'
 1433419617150	Extract method 'atDestination'
+1433437789581	Extract method 'atRegistering'
+1433438411614	Extract method 'circleNetwork'
