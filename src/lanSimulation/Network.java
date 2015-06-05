@@ -312,10 +312,10 @@ Therefore #receiver sends a packet across the token ring network, until either
 				// just ignore
 			}
 			
-			currentNode = currentNode.nextNode_;
 			
-			if (atDestination(currentNode, packet)){		
-				currentNode = send(currentNode, packet, report, true);	
+			
+			if (atDestination(currentNode.nextNode_, packet)){		
+				currentNode = send(currentNode.nextNode_, packet, report, true);	
 			}
 		}else{
 		

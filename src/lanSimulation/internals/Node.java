@@ -88,18 +88,28 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 
 	public void printOn(StringBuffer buf) {
 		Node currentNode = this;
-		do {
-			//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
-			if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
-				currentNode.printOnAppend(buf);
-			}else{
-				buf.append("(Unexpected)");;
-			}	
-			
-			buf.append(" -> ");
-			currentNode = currentNode.nextNode_;
-		} while (currentNode != this);
+		currentNode = sendPrintOf(buf, currentNode);
 		buf.append(" ... ");
+	}
+
+	private Node sendPrintOf(StringBuffer buf, Node currentNode) {
+		//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+		if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
+			currentNode.printOnAppend(buf);
+		}else{
+			buf.append("(Unexpected)");;
+		}	
+		buf.append(" -> ");
+		
+		if (atLastNode(currentNode.nextNode_)){
+			currentNode = sendPrintOf(buf, currentNode.nextNode_);
+		}
+		
+		return currentNode;
+	}
+
+	private boolean atLastNode(Node currentNode) {
+		return currentNode != this;
 	}
 
 
@@ -115,35 +125,51 @@ Construct a <em>Node</em> with given #type and #name, and which is linked to #ne
 		buf.append("<HTML>\n<HEAD>\n<TITLE>LAN Simulation</TITLE>\n</HEAD>\n<BODY>\n<H1>LAN SIMULATION</H1>");
 		Node currentNode = this;
 		buf.append("\n\n<UL>");
-		do {
-			buf.append("\n\t<LI> ");
-			//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
-			if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
-				currentNode.printOnAppend(buf);
-			}else{
-				buf.append("(Unexpected)");
-			}
-			
-			buf.append(" </LI>");
-			currentNode = currentNode.nextNode_;
-		} while (currentNode != this);
+		currentNode = sendPrintHTMLOn(buf, currentNode);
+		
 		buf.append("\n\t<LI>...</LI>\n</UL>\n\n</BODY>\n</HTML>\n");
+	}
+
+	private Node sendPrintHTMLOn(StringBuffer buf, Node currentNode) {
+		buf.append("\n\t<LI> ");
+		//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+		if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
+			currentNode.printOnAppend(buf);
+		}else{
+			buf.append("(Unexpected)");
+		}
+			
+		buf.append(" </LI>");
+		
+		if (atLastNode(currentNode.nextNode_)){
+			currentNode = sendPrintHTMLOn(buf, currentNode.nextNode_);
+		}
+		return currentNode;
 	}
 
 	public void printXMLOn(Network network, StringBuffer buf) {
 		Node currentNode = this;
 		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<network>");
-		do {
-			buf.append("\n\t");
-			//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
-			if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
-				currentNode.printXMLOnAppend(buf);
-			}else{
-				buf.append("<unknown></unknown>");
-			}
-			currentNode = currentNode.nextNode_;
-		} while (currentNode != this);
+		currentNode = sendPrintXMLOn(buf, currentNode);
+		
 		buf.append("\n</network>");
+	}
+
+	private Node sendPrintXMLOn(StringBuffer buf, Node currentNode) {
+		buf.append("\n\t");
+		//if (currentNode.type_ == Node.NODE || currentNode.type_ == Node.PRINTER || currentNode.type_ == Node.WORKSTATION ){
+		if (currentNode instanceof Node || currentNode instanceof Printer || currentNode instanceof WorkStation ){
+			currentNode.printXMLOnAppend(buf);
+		}else{
+			buf.append("<unknown></unknown>");
+		}
+		
+		
+		if(atLastNode(currentNode.nextNode_)){
+			currentNode = sendPrintXMLOn(buf, currentNode.nextNode_);
+		}
+		
+		return currentNode;
 	}
 
 

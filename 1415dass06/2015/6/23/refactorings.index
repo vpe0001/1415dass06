@@ -18,3 +18,7 @@
 1433447398506	Extract method 'printXMLOnAppend'
 1433447460692	Extract method 'printXMLOnAppendWorkStation'
 1433447487148	Extract method 'printXMLOnAppendPrinter'
+1433504494063	Extract method 'atLastNode'
+1433504565718	Extract method 'sendPrintOf'
+1433504895275	Extract method 'sendPrintHTMLOn'
+1433504995859	Extract method 'sendPrintXMLOn'
